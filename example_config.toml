@@ -1,0 +1,10 @@
+[telegram]
+bot_token = "<BOT-TOKEN>"
+admin = "<ADMIN>"
+
+[clashofclans]
+api_key = "<COC-DEV-API_KEY>"
+
+[proxy]
+proxy_uri = "https://cocproxy.royaleapi.dev"
+
