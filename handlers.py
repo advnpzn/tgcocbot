@@ -3,7 +3,7 @@ from telegram import Update, InlineKeyboardMarkup, constants
 
 from strings import WELCOME, HELP
 from keyboard import START_KEYBOARD, SEARCH_KEYBOARD, SETTINGS_KEYBOARD
-from coc import Clan, Client
+import coc
 from config import config
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -26,19 +26,26 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def search(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    coc_client: Client = await Client(base_url=config.PROXY).login_with_tokens(config.API_KEY)
+    coc_client = await coc.Client(base_url=config.PROXY).login_with_tokens(config.API_KEY)
     reply_markup = InlineKeyboardMarkup(SEARCH_KEYBOARD)
-    update.message.reply_text("Please select what you do you want to search", reply_markup=reply_markup)
+    update.message.reply_text("Please select what you want to search", reply_markup=reply_markup)
 
 
 async def search_clans(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     args = context.args
     if len(args) > 0:
-        coc_client: Client = await Client(base_url=config.PROXY).login_with_tokens(config.API_KEY)
-        clans = await coc_client.search_clans("".join(args))
-        for clan in clans:
-            await update.message.reply_text(text=clan.name)
-        
+        async with coc.Client(base_url=config.PROXY) as coc_client:
+            await coc_client.login_with_tokens(config.API_KEY)
+            clans = await coc_client.search_clans(name=" ".join(args))
+
+            if len(clans) < 1:
+                update.message.reply_text("Could not find any clans with that following name.")
+            else:
+                c = ""
+                for clan in clans:
+                    c = c + f"{clan.name}\n"
+
+                await update.message.reply_text(text=c)
     else:
         await update.message.reply_text(text="Please enter a clan name!")
 
