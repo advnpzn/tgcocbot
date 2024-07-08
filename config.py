@@ -14,6 +14,9 @@ class Config:
         self.BOT_TOKEN = None
         self.API_KEY = None
         self.PROXY = None
+        self.CHAT_ID = None
+        self.CLAN_TAG = None
+
 
         self.__load_config()
 
@@ -37,10 +40,16 @@ class Config:
                 self.PROXY = config['proxy']['proxy_uri']
                 self.BOT_TOKEN = config['telegram']['bot_token']
                 self.API_KEY = config['clashofclans']['api_key']
+                self.CHAT_ID = config['telegram']['chat_id']
+                self.CLAN_TAG = config['clashofclans']['clan_tag']
             else:
-                self.PROXY = os.getenv("COC_PROXY", "https://cocproxy.royaleapi.dev")
+                self.PROXY = os.getenv("COC_PROXY", "https://cocproxy.royaleapi.dev/v1")
                 self.BOT_TOKEN = os.getenv("BOT_TOKEN", None)
                 self.API_KEY = os.environ.get("COC_API", None)
+                self.CHAT_ID = os.environ.get("CHAT_ID", None)
+                self.CLAN_TAG = os.environ.get("CLAN_TAG", None)
 
         except Exception as err:
            raise err
+        
+config = Config()

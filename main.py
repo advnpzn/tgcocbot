@@ -1,24 +1,14 @@
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-from config import Config
+from telegram.ext import ApplicationBuilder
+from config import config
+from handlers import handlers
 import logging
-
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
-
-cfg = Config()
-
-async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-
-    logging.info("Sending hello message.")
-    await context.bo
-    logging.info("Done :)")
+        
 
 if __name__ == '__main__':
+
+    logging.basicConfig(level=logging.INFO)
     
-    app = ApplicationBuilder().token(cfg.BOT_TOKEN).build()
-    app.add_handler(CommandHandler('hello', hello))
+    app = ApplicationBuilder().token(config.BOT_TOKEN).build()
+    app.add_handlers(handlers=handlers)
 
     app.run_polling()
